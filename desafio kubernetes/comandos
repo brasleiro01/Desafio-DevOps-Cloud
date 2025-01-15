@@ -1,0 +1,4 @@
+kubectl apply -f <nome do manifesto>
+
+kubectl port-forward pod/<nome do pod> <porta desejada>:<padrão do app>
+kubectl port-forward service/<nome do service> <porta desejada>:<padrão do app>

@@ -1,0 +1,18 @@
+install via script:
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+###COMANDOS###
+criando um cluster single node:
+k3d cluster create
+
+criar cluster 2 control-plane 3 nodes:
+k3d cluster create desafio --servers 2 --agents 3
+
+criar cluster 1 control-plane 2 nodes e bind de porta:
+k3d cluster create desafio --servers 1 --agents 2 -p "8080:30000@loadbalancer"
+
+deletar cluster:
+k3d cluster delete
+
+listar os clusters:
+k3d cluster list
