@@ -22,8 +22,8 @@ jobs:
           push: true
           file: fake-shop/src/Dockerfile
           tags: |
-            vinnioliver/fake-shop:latest
-            vinnioliver/fake-shop:v${{github.run_number}}
+            vinnioliver66/fake-shop:latest
+            vinnioliver66/fake-shop:v${{github.run_number}}
 
   cd:
     runs-on: ubuntu-latest
