@@ -15,10 +15,15 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Construção da Imagem Docker
-        run: echo "Executando o comando Docker build"
-      - name: Envio da Imagem Docker
-        run: echo "Executando o comando Docker push"
+      - name: Construção e envio da Imagem Docker
+        uses: docker/build-push-action@v6
+        with:
+          context: fake-shop/src
+          push: true
+          file: fake-shop/src/Dockerfile
+          tags: |
+            vinnioliver/fake-shop:latest
+            vinnioliver/fake-shop:v${{github.run_number}}
 
   cd:
     runs-on: ubuntu-latest
