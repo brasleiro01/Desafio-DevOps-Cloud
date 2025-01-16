@@ -1,4 +1,4 @@
-name: CI-CD
+name: desafio
 
 on:
   push:
@@ -15,18 +15,38 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Construção da Imagem Docker
-        run: echo "Executando o comando Docker build"
-      - name: Envio da Imagem Docker
-        run: echo "Executando o comando Docker push"
+      - name: Construção e envio da Imagem Docker
+        uses: docker/build-push-action@v6
+        with:
+          context: fake-shop/src
+          push: true
+          file: fake-shop/src/Dockerfile
+          tags: |
+            vinnioliver66/fake-shop:latest
+            vinnioliver66/fake-shop:v${{github.run_number}}
 
   cd:
     runs-on: ubuntu-latest
     needs: [ci]
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
     steps:
+      - name: Obter o código do projeto
+        uses: actions/checkout@v4
       - name: Autenticando na AWS
-        run: echo "Executando o comando aws configure"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
       - name: Configurar o kubectl
-        run: echo "Executando o comando aws eks update-kubeconfig"
+        run: aws eks update-kubeconfig --name aulas
       - name: Deploy dos manifestos no kubernetes
-        run: echo "Executando o comando kubectl apply"
+        uses: Azure/k8s-deploy@v5
+        with:
+          manifests: |
+              desafio aws/manifests/deployment.yaml
+          images: |
+              vinnioliver66/fake-shop:v${{github.run_number}}

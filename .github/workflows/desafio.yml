@@ -28,6 +28,10 @@ jobs:
   cd:
     runs-on: ubuntu-latest
     needs: [ci]
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
     steps:
       - name: Obter o código do projeto
         uses: actions/checkout@v4
@@ -38,6 +42,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
       - name: Configurar o kubectl
-        run: echo "Executando o comando aws eks update-kubeconfig"
+        run: aws eks update-kubeconfig --name aulas
       - name: Deploy dos manifestos no kubernetes
-        run: echo "Executando o comando kubectl apply"
+        uses: Azure/k8s-deploy@v5
+        with:
+          manifests: |
+              desafio aws/manifests/deployment.yaml
+          images: |
+              vinnioliver66/fake-shop:v${{github.run_number}}
