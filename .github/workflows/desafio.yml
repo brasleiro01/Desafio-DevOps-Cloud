@@ -51,5 +51,11 @@ jobs:
         with:
           manifests: |
               desafio aws/manifests/deployment.yaml
+              desafio prometheus e grafana/manifests/deployment.yaml
           images: |
               vinnioliver66/fake-shop:v${{github.run_number}}
+              quay.io/prometheus/node-exporter:v1.8.2
+              registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.13.0
+              quay.io/prometheus-operator/prometheus-config-reloader:v0.75.2
+              quay.io/prometheus/prometheus:v2.54.0
+              docker.io/grafana/grafana:11.3.0
